@@ -3,11 +3,13 @@
 
 #include <algorithm>
 #include <array>
+#include <istream>
 #include <ostream>
 #include <string>
 
 namespace biomodern::utility {
 
+using namespace std::string_literals;
 using istring = std::basic_string<std::int8_t>;
 using istring_view = std::basic_string_view<std::int8_t>;
 
@@ -40,7 +42,7 @@ struct Codec {
   };
 
   static auto rhash(std::size_t key, std::size_t size) {
-    auto seq = istring{};
+    auto seq = ""_is;
     for (auto i = 0; i < size; i++) {
       const auto shift = (size - i - 1) * 2;
       seq += (key & 3ull << shift) >> shift;
@@ -49,7 +51,7 @@ struct Codec {
   }
 
   static auto rev_comp(istring_view seq) {
-    auto res = istring{};
+    auto res = ""_is;
     res.reserve(seq.size());
     std::transform(seq.rbegin(), seq.rend(), std::back_inserter(res),
                    [](const auto c) { return c == 4 ? 4 : 3 - c; });
@@ -57,7 +59,7 @@ struct Codec {
   }
 
   static auto to_istring(std::string_view seq) {
-    auto res = istring{};
+    auto res = ""_is;
     res.reserve(seq.size());
     std::transform(seq.begin(), seq.end(), std::back_inserter(res), to_int);
     return res;
@@ -83,7 +85,7 @@ struct Codec {
   };
 
   static auto rev_comp(std::string_view seq) {
-    auto res = std::string{};
+    auto res = ""s;
     res.reserve(seq.size());
     std::transform(seq.rbegin(), seq.rend(), std::back_inserter(res), comp);
     return res;
@@ -92,9 +94,17 @@ struct Codec {
 
 }  // namespace biomodern::utility
 
-inline auto& operator<<(std::ostream& os, biomodern::utility::istring_view s) {
-  for (const auto c : s) os << +c;
-  return os;
+inline auto& operator<<(std::ostream& out, biomodern::utility::istring_view s) {
+  for (const auto c : s) out << +c;
+  return out;
+}
+
+inline auto& operator>>(std::istream& in, biomodern::utility::istring& is) {
+  auto s = std::string{};
+  in >> s;
+  is.clear();
+  for (const auto c : s) is.push_back(c - '0');
+  return in;
 }
 
 #endif
