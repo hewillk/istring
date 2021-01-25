@@ -13,7 +13,7 @@ using namespace std::string_literals;
 using istring = std::basic_string<std::int8_t>;
 using istring_view = std::basic_string_view<std::int8_t>;
 
-auto operator""_is(const char* s, std::size_t size) {
+inline auto operator""_is(const char* s, std::size_t size) {
   auto is = istring{};
   for (auto i = 0; i < size; i++) is.push_back(s[i] - '0');
   return is;
