@@ -1,5 +1,4 @@
-#ifndef BIOMODERN__UTILITY_ISTRING_HPP_
-#define BIOMODERN__UTILITY_ISTRING_HPP_
+#pragma once
 
 #include <algorithm>
 #include <array>
@@ -36,8 +35,7 @@ struct Codec {
 
   constexpr static auto hash(istring_view seq) noexcept {
     auto key = 0ull;
-    for (auto i = 0; i < seq.size(); i++)
-      key |= (seq[seq.size() - i - 1] & 3ull) << 2 * i;
+    for (auto i = 0; i < seq.size(); i++) key |= (seq[seq.size() - i - 1] & 3ull) << 2 * i;
     return key;
   };
 
@@ -53,8 +51,9 @@ struct Codec {
   static auto rev_comp(istring_view seq) {
     auto res = ""_is;
     res.reserve(seq.size());
-    std::transform(seq.rbegin(), seq.rend(), std::back_inserter(res),
-                   [](const auto c) { return c == 4 ? 4 : 3 - c; });
+    std::transform(seq.rbegin(), seq.rend(), std::back_inserter(res), [](const auto c) {
+      return c == 4 ? 4 : 3 - c;
+    });
     return res;
   }
 
@@ -68,19 +67,14 @@ struct Codec {
   constexpr static auto comp = [](char c) {
     switch (c) {
       case 'a':
-      case 'A':
-        return 'T';
+      case 'A': return 'T';
       case 'c':
-      case 'C':
-        return 'G';
+      case 'C': return 'G';
       case 'g':
-      case 'G':
-        return 'C';
+      case 'G': return 'C';
       case 't':
-      case 'T':
-        return 'A';
-      default:
-        return 'N';
+      case 'T': return 'A';
+      default: return 'N';
     }
   };
 
@@ -106,5 +100,3 @@ inline auto& operator>>(std::istream& in, biomodern::utility::istring& is) {
   for (const auto c : s) is.push_back(c - '0');
   return in;
 }
-
-#endif
