@@ -9,8 +9,9 @@
 namespace biomodern::utility {
 
 using namespace std::string_literals;
-using istring = std::basic_string<std::int8_t>;
-using istring_view = std::basic_string_view<std::int8_t>;
+using ichar = std::int8_t;
+using istring = std::basic_string<ichar>;
+using istring_view = std::basic_string_view<ichar>;
 
 inline auto operator""_is(const char* s, std::size_t size) {
   auto is = istring{};
@@ -20,7 +21,7 @@ inline auto operator""_is(const char* s, std::size_t size) {
 
 struct Codec {
   constexpr static auto ints = [] {
-    auto ints = std::array<std::int8_t, 128>{};
+    auto ints = std::array<ichar, 128>{};
     ints.fill(4);
     ints['a'] = ints['A'] = 0;
     ints['c'] = ints['C'] = 1;
