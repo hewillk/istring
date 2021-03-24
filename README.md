@@ -2,7 +2,7 @@
 `Biomodern.Istring` is just type alias to the [`basic_string<int8_t>`][basic_string], which can be using for representing the encoded string of nucleotide sequence which `0-3` indicate `ACGT`, and `4` indicates the unknown base `N`.
 The head only [istring.hpp][istring_hpp] contains several utility functions for the nucleotide sequence such as:
 ```cpp
-istring operator ""_is(const char*, size_t); // user-defined literals for the istring
+istring operator ""_s(const char*); // user-defined literals for the istring
 size_t Codec::hash(istring); // integer encoding for istring
 istring Codec::rhash(size_t, size_t); // map integer back to the istring
 string Codec::rev_comp(string_view);
@@ -22,12 +22,12 @@ int main() {
   using namespace std::string_literals;
   using namespace biomodern::utility;
   
-  const auto s = "12031"_is;
+  const auto s = 12031_s;
   assert(Codec::hash(s) == 0b01'10'00'11'01);
   assert(Codec::rhash(0b01'10'00'11'01, 5) == s);
-  assert(Codec::to_istring("ACNGGTT") == "0142233"_is);
+  assert(Codec::to_istring("ACNGGTT") == 0142233_s);
   assert(Codec::rev_comp("ACNGGTT") == "AACCNGT"s);
-  assert(Codec::rev_comp(s) == "20312"_is);
+  assert(Codec::rev_comp(s) == 20312_s);
   std::cout << s << "\n";
 }
 ```
